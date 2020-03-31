@@ -1,4 +1,5 @@
 import React from 'react';
+import TodoListTask from './TodoListTask';
 
 
 class TodoListTasks extends React.Component {
@@ -6,22 +7,10 @@ class TodoListTasks extends React.Component {
         return (
             
         <div className="todoList-tasks">
-            <div className="todoList-task">
-                <input type="checkbox" checked={true}/>
-                <span>CSS</span>
-            </div>
-            <div className="todoList-task">
-                <input type="checkbox" checked={false}/>
-                <span>JS</span>
-            </div>
-            <div className="todoList-task">
-                <input type="checkbox" checked={false}/>
-                <span>ReactJS</span>
-            </div>
-            <div className="todoList-task">
-                <input type="checkbox" checked={true}/>
-                <span>Patterns</span>
-            </div>
+            <TodoListTask type="checkbox" bool={true} tech="CSS" />
+            <TodoListTask type="checkbox" bool={false} tech="JS" />
+            <TodoListTask type="checkbox" bool={false} tech="ReactJS" />
+            <TodoListTask type="checkbox" bool={true} tech="Patterns" />
         </div>      
         );
     }
