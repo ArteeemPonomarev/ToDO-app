@@ -2,7 +2,7 @@
   "name": "01-todolist",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://arteeemponomarev.github.io/demo-ghp",
+  "homepage": "https://arteeemponomarev.github.io/ToDO-app",
   "dependencies": {
     "react": "^16.8.6",
     "react-dom": "^16.8.6",

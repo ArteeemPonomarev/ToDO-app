@@ -9,7 +9,6 @@ class TodoListFooter extends React.Component {
             <button>Completed</button>
             <button>Active</button>
         </div>     
-           
         );
     }
 }
