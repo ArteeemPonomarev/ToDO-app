@@ -5,9 +5,9 @@ class TodoListFooter extends React.Component {
     render = () => {
         return (
         <div className="todoList-footer">
-            <button>All</button>
-            <button>Completed</button>
-            <button>Active</button>
+            <button className = "filter-active">All</button>
+            <button className = "filter-active">Completed</button>
+            <button className = "filter-active">Active</button>
         </div>     
         );
     }

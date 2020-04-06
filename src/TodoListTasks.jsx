@@ -4,13 +4,12 @@ import TodoListTask from './TodoListTask';
 
 class TodoListTasks extends React.Component {
     render = () => {
-        return (
-            
+
+        let taskElements = this.props.tasks.map(elem => <TodoListTask isDone={elem.isDone} title={elem.title} priority={elem.priority}/>);
+
+        return (   
         <div className="todoList-tasks">
-            <TodoListTask type="checkbox" bool={true} tech="CSS" />
-            <TodoListTask type="checkbox" bool={false} tech="JS" />
-            <TodoListTask type="checkbox" bool={false} tech="ReactJS" />
-            <TodoListTask type="checkbox" bool={true} tech="Patterns" />
+            {taskElements}
         </div>      
         );
     }

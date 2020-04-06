@@ -5,12 +5,21 @@ import TodoListTasks from './TodoListTasks';
 import TodoListFooter from './TodoListFooter';
 
 class App extends React.Component {
+    
+    tasks =[
+        {isDone: true, title: "CSS", priority: "low"},
+        {isDone: false, title: "JS", priority: "low"},
+        {isDone: false, title: "ReactJS", priority: "high"},
+        {isDone: true, title: "Patterns", priority: "high"}
+    ];
+    
     render = () => {
+
         return (
             <div className="App">
                 <div className="todoList">
                     <TodoListHeader />
-                    <TodoListTasks />
+                    <TodoListTasks tasks = {this.tasks}/>
                     <TodoListFooter />
                 </div>
             </div>

@@ -5,8 +5,8 @@ class TodoListTask extends React.Component {
     render = (props) => {
         return (
             <div className="todoList-task">
-                <input type={this.props.type} checked={this.props.bool}/>
-                <span>{this.tech}</span>
+                <input type="checkbox" checked={this.props.isDone}/>
+                <span>{this.props.title} priority: {this.props.priority}</span>
             </div>      
         );
     }
