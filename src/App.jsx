@@ -12,6 +12,8 @@ class App extends React.Component {
         {isDone: false, title: "ReactJS", priority: "high"},
         {isDone: true, title: "Patterns", priority: "high"}
     ];
+
+    filterValue = "Completed";
     
     render = () => {
 
@@ -20,7 +22,7 @@ class App extends React.Component {
                 <div className="todoList">
                     <TodoListHeader />
                     <TodoListTasks tasks = {this.tasks}/>
-                    <TodoListFooter />
+                    <TodoListFooter filterValue = {this.filterValue} />
                 </div>
             </div>
         );
