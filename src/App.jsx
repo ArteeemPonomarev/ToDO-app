@@ -58,9 +58,9 @@ class App extends React.Component {
                 // eslint-disable-next-line default-case
                 switch (this.state.filterValue){
                     case 'Active':
-                        return t.isDone === false;
+                        return !t.isDone;
                     case 'Completed':
-                        return t.isDone === true;
+                        return t.isDone;
                     case 'All':
                             return true;
                     default:

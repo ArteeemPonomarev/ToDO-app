@@ -5,10 +5,10 @@ import PropTypes from 'prop-types';
 class TodoListTasks extends React.Component {
     render = () => {
 
-        let myFn = t => {
-            return <TodoListTask task={t} changeStatus={this.props.changeStatus} />
-        }
-        let taskElements = this.props.tasks.map(myFn);
+        // let myFn = t => {
+        //     return <TodoListTask task={t} changeStatus={this.props.changeStatus} />
+        // }
+        let taskElements = this.props.tasks.map(t => <TodoListTask task={t} changeStatus={this.props.changeStatus} />);
 
         return (   
         <div className="todoList-tasks">
