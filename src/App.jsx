@@ -14,24 +14,28 @@ class App extends React.Component {
     // };
     state = {
         tasks: [
-            { isDone: true, title: "CSS", priority: "low" },
-            { isDone: false, title: "JS", priority: "low" },
-            { isDone: false, title: "ReactJS", priority: "high" },
-            { isDone: true, title: "Patterns", priority: "high" }
+            { id: 0, isDone: true, title: "CSS", priority: "low" },
+            { id: 1, isDone: false, title: "JS", priority: "low" },
+            { id: 2, isDone: false, title: "ReactJS", priority: "high" },
+            { id: 3, isDone: true, title: "Patterns", priority: "high" }
         ],
 
         filterValue: "All"
     };
 
+    nextTaskId = 6;
+
     addTask = (newTitle) => {
         //let newText = this.newTaskTitleRef.current.value;
         //this.newTaskTitleRef.current.value = '';
         let newTask = {
+            id: this.nextTaskId,
             isDone: false,
             title:  newTitle,
             priority: 'low'
         }
 
+        this.nextTaskId++;//---по длинне массива можно брать
         let newTasks = [...this.state.tasks, newTask];
         this.setState ({ tasks: newTasks });
         
@@ -41,10 +45,20 @@ class App extends React.Component {
         this.setState({filterValue: newFilterValue})
     };
 
-    changeStatus = (task, isDone) => {
+    changeStatus = (taskId, isDone) => {
         let newTasks = this.state.tasks.map(t => {
-            if (t === task) {
+            if (t.id === taskId) {
                 return {...t, isDone: isDone}
+            }
+            return t
+        })
+        this.setState({tasks: newTasks})
+    };
+
+    changeTitle = (taskId, title) => {
+        let newTasks = this.state.tasks.map(t => {
+            if (t.id === taskId) {
+                return {...t, title: title}
             }
             return t
         })
@@ -71,7 +85,9 @@ class App extends React.Component {
             <div className="App">
                 <div className="todoList">
                     <TodoListHeader addTask = {this.addTask}/>
-                    <TodoListTasks tasks={filteredTasks} changeStatus={this.changeStatus}/>
+                    <TodoListTasks tasks={filteredTasks}
+                                   changeStatus={this.changeStatus}
+                                   changeTitle={this.changeTitle}/>
                     <TodoListFooter filterValue={this.state.filterValue}
                                     changeFilter={this.changeFilter}
                      />

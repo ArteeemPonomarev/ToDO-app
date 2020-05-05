@@ -53,8 +53,9 @@ class TodoListHeader extends React.Component {
 
                         <input 
                             type="text" 
-                            onChange={this.onInputChange} className={classForError} placeholder="New task name" 
-                            ref = {this.newTaskTitleRef} 
+                            onChange={this.onInputChange} 
+                            className={classForError} 
+                            placeholder="New task name"  
                             value={this.state.title}
                             onKeyPress={this.onKeyPressAction}/>
 
