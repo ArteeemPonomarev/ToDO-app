@@ -12,18 +12,46 @@ class App extends React.Component {
     //     super(props);
     //     this.newTaskTitleRef = React.createRef();
     // };
+    componentDidMount() {
+        this.restoreState();
+    }
+
     state = {
         tasks: [
-            { id: 0, isDone: true, title: "CSS", priority: "low" },
-            { id: 1, isDone: false, title: "JS", priority: "low" },
-            { id: 2, isDone: false, title: "ReactJS", priority: "high" },
-            { id: 3, isDone: true, title: "Patterns", priority: "high" }
+            // { id: 0, isDone: true, title: "CSS", priority: "low" },
+            // { id: 1, isDone: false, title: "JS", priority: "low" },
+            // { id: 2, isDone: false, title: "ReactJS", priority: "high" },
+            // { id: 3, isDone: true, title: "Patterns", priority: "high" }
         ],
 
-        filterValue: "All"
+        filterValue: 'All'
     };
 
-    nextTaskId = 6;
+    nextTaskId = 0;
+
+    saveState = () => {
+        // превращаем в строку, потому что Local storage может принять на хранение только строку
+        localStorage.setItem('our-state', JSON.stringify(this.state))
+        //хотим сохранять всякий раз, когда что-то(state) меняем
+    }
+
+    restoreState = () => {
+        let state = {
+            tasks: [],
+            filterValue: 'All'
+        }
+        let stateAsString = localStorage.getItem('our-state');
+        if (stateAsString){
+            state = JSON.parse(stateAsString);
+        }
+        this.setState(state, () => {
+            this.state.tasks.forEach( task => {
+                if(task.id >= this.nextTaskId) {
+                    this.nextTaskId = task.id + 1;
+                }
+            })
+        });
+    }
 
     addTask = (newTitle) => {
         //let newText = this.newTaskTitleRef.current.value;
@@ -31,66 +59,76 @@ class App extends React.Component {
         let newTask = {
             id: this.nextTaskId,
             isDone: false,
-            title:  newTitle,
+            title: newTitle,
             priority: 'low'
         }
 
         this.nextTaskId++;//---по длинне массива можно брать
         let newTasks = [...this.state.tasks, newTask];
-        this.setState ({ tasks: newTasks });
-        
+        this.setState({tasks: newTasks}, this.saveState);
+        //this.setState принимает вторым параметром callback,который изменится строго после того, как изменится state
     };
 
     changeFilter = (newFilterValue) => {
-        this.setState({filterValue: newFilterValue})
+        this.setState({filterValue: newFilterValue}, this.saveState)
+    };
+
+    changeTask = (taskId, newPropobj) => {
+        let newTasks = this.state.tasks.map(t => {
+            if (t.id === taskId) {
+                return {...t, ...newPropobj}
+            }
+            return t
+        })
+        this.setState({tasks: newTasks}, this.saveState)
     };
 
     changeStatus = (taskId, isDone) => {
-        let newTasks = this.state.tasks.map(t => {
-            if (t.id === taskId) {
-                return {...t, isDone: isDone}
-            }
-            return t
-        })
-        this.setState({tasks: newTasks})
+        this.changeTask(taskId, {isDone: isDone})
     };
 
-    changeTitle = (taskId, title) => {
-        let newTasks = this.state.tasks.map(t => {
-            if (t.id === taskId) {
-                return {...t, title: title}
-            }
-            return t
-        })
-        this.setState({tasks: newTasks})
-    };
+    changeTitle = (taskId, newTitle) => {
+        this.changeTask(taskId, {title: newTitle})
+    }
+
+    // changeTitle = (taskId, title) => {
+    //     let newTasks = this.state.tasks.map(t => {
+    //         if (t.id === taskId) {
+    //             return {...t, title: title}
+    //         }
+    //         return t
+    //     })
+    //     this.setState({tasks: newTasks})
+    // };
+
 
     render = () => {
 
-        let filteredTasks = 
+        let filteredTasks =
             this.state.tasks.filter(t => {
                 // eslint-disable-next-line default-case
-                switch (this.state.filterValue){
+                switch (this.state.filterValue) {
                     case 'Active':
                         return !t.isDone;
                     case 'Completed':
                         return t.isDone;
                     case 'All':
-                            return true;
+                        return true;
                     default:
                         return true;
-                }});
+                }
+            });
 
         return (
             <div className="App">
                 <div className="todoList">
-                    <TodoListHeader addTask = {this.addTask}/>
+                    <TodoListHeader addTask={this.addTask}/>
                     <TodoListTasks tasks={filteredTasks}
                                    changeStatus={this.changeStatus}
                                    changeTitle={this.changeTitle}/>
                     <TodoListFooter filterValue={this.state.filterValue}
                                     changeFilter={this.changeFilter}
-                     />
+                    />
                 </div>
             </div>
         );
