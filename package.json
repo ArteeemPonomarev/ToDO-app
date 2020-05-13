@@ -32,6 +32,7 @@
     ]
   },
   "devDependencies": {
+    "csscomb": "^4.3.0",
     "gh-pages": "^2.2.0"
   }
 }
