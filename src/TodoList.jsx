@@ -3,6 +3,7 @@ import AddNewItemForm from './AddNewItemForm';
 import TodoListTasks from './TodoListTasks';
 import TodoListFooter from './TodoListFooter';
 import TodoListTitle from "./TodoListTitle";
+import {connect} from "react-redux";
 
 
 class TodoList extends React.Component {
@@ -65,10 +66,10 @@ class TodoList extends React.Component {
             title: newTitle,
             priority: 'low'
         }
-
-        this.nextTaskId++;//---по длинне массива можно брать
-        let newTasks = [...this.state.tasks, newTask];
-        this.setState({tasks: newTasks}, this.saveState);
+        this.props.addTask(this.props.id, newTask)
+       // this.nextTaskId++;//---по длинне массива можно брать
+        //let newTasks = [...this.state.tasks, newTask];
+       /// this.setState({tasks: newTasks}, this.saveState);
         //this.setState принимает вторым параметром callback,который изменится строго после того, как изменится state
     };
 
@@ -77,13 +78,14 @@ class TodoList extends React.Component {
     };
 
     changeTask = (taskId, newPropobj) => {
-        let newTasks = this.state.tasks.map(t => {
-            if (t.id === taskId) {
-                return {...t, ...newPropobj}
-            }
-            return t
-        })
-        this.setState({tasks: newTasks}, this.saveState)
+        // let newTasks = this.state.tasks.map(t => {
+        //     if (t.id === taskId) {
+        //         return {...t, ...newPropobj}
+        //     }
+        //     return t
+        // })
+        // this.setState({tasks: newTasks}, this.saveState)
+        this.props.changeTask(this.props.id, taskId, newPropobj)
     };
 
     changeStatus = (taskId, isDone) => {
@@ -107,8 +109,9 @@ class TodoList extends React.Component {
 
     render = () => {
 
+
         let filteredTasks =
-            this.state.tasks.filter(t => {
+            this.props.tasks.filter(t => {
                 // eslint-disable-next-line default-case
                 switch (this.state.filterValue) {
                     case 'Active':
@@ -141,5 +144,26 @@ class TodoList extends React.Component {
     }
 }
 
-export default TodoList;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        addTask: (todolistId,newTask) => {
+            let action = {
+                type: 'ADD_TASK',
+                todolistId,
+                newTask
+            }
+            dispatch(action)
+        },
+        changeTask: (todolistId, taskId, obj) => {
+            let action = {
+                type: 'CHANGE_TASK',
+                taskId,
+                obj
+            }
+            dispatch(action)
+        }
+    }
+}
+
+export default connect(null, mapDispatchToProps)(TodoList);
 
