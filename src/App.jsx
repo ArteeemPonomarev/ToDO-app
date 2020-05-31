@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css'
-import TodoList from "./TodoList";
-import AddNewItemForm from "./AddNewItemForm";
+import TodoList from "./components/TodoList";
+import AddNewItemForm from "./components/AddNewItemForm";
 import {connect} from "react-redux";
 
 
@@ -44,7 +44,7 @@ class App extends React.Component {
 
     addTodoList = (title) => {
         let newTodoList = {
-            id: 4,
+            id: this.nextTodoListId,
             title: title,
             tasks: []
         }
@@ -52,6 +52,7 @@ class App extends React.Component {
         //let newToDoLists = [...this.state.todolists, newTodoList];
         // this.setState({todolists: newToDoLists}, this.saveState);
         this.props.createTodolists(newTodoList);
+        this.nextTodoListId++;
     }
 
 
@@ -59,7 +60,8 @@ class App extends React.Component {
 
         const todolists = this.props.todolists.map(tl => <TodoList key={tl.id}
                                                                    id={tl.id}
-                                                                   title={tl.title} tasks={tl.tasks}/>)
+                                                                   title={tl.title}
+                                                                   tasks={tl.tasks}/>)
 
         return (
             <>
@@ -84,7 +86,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         createTodolists: (newTodolist) => {
             let action = {
-                type: 'CREATE_TODOLIST',
+                type: 'ADD-TODOLIST',
                 newTodolist
             };
             dispatch(action)

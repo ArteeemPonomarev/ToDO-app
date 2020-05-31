@@ -8,23 +8,12 @@ import {connect} from "react-redux";
 
 class TodoList extends React.Component {
 
-    // eslint-disable-next-line no-useless-constructor
-    // constructor(props) {
-    //     super(props);
-    //     this.newTaskTitleRef = React.createRef();
-    // };
     componentDidMount() {
-        this.restoreState();
+        //this.restoreState();
     }
 
     state = {
-        tasks: [
-            // { id: 0, isDone: true, title: "CSS", priority: "low" },
-            // { id: 1, isDone: false, title: "JS", priority: "low" },
-            // { id: 2, isDone: false, title: "ReactJS", priority: "high" },
-            // { id: 3, isDone: true, title: "Patterns", priority: "high" }
-        ],
-
+        tasks: [ ],
         filterValue: 'All'
     };
 
@@ -66,6 +55,7 @@ class TodoList extends React.Component {
             title: newTitle,
             priority: 'low'
         }
+        this.nextTaskId++;
         this.props.addTask(this.props.id, newTask)
        // this.nextTaskId++;//---по длинне массива можно брать
         //let newTasks = [...this.state.tasks, newTask];
@@ -74,26 +64,19 @@ class TodoList extends React.Component {
     };
 
     changeFilter = (newFilterValue) => {
-        this.setState({filterValue: newFilterValue}, this.saveState)
+        this.setState({filterValue: newFilterValue})
     };
 
     changeTask = (taskId, newPropobj) => {
-        // let newTasks = this.state.tasks.map(t => {
-        //     if (t.id === taskId) {
-        //         return {...t, ...newPropobj}
-        //     }
-        //     return t
-        // })
-        // this.setState({tasks: newTasks}, this.saveState)
         this.props.changeTask(this.props.id, taskId, newPropobj)
     };
 
     changeStatus = (taskId, isDone) => {
-        this.changeTask(taskId, {isDone: isDone})
+        this.props.changeTask(this.props.id,taskId, {isDone: isDone})
     };
 
     changeTitle = (taskId, newTitle) => {
-        this.changeTask(taskId, {title: newTitle})
+        this.props.changeTask(this.props.id,taskId, {title: newTitle})
     }
 
     // changeTitle = (taskId, title) => {
@@ -112,7 +95,6 @@ class TodoList extends React.Component {
 
         let filteredTasks =
             this.props.tasks.filter(t => {
-                // eslint-disable-next-line default-case
                 switch (this.state.filterValue) {
                     case 'Active':
                         return !t.isDone;
@@ -129,10 +111,13 @@ class TodoList extends React.Component {
             <div className="App">
                 <div className="todoList">
                     <div className="todoList-header">
-                        <TodoListTitle headerName={this.props.title}/>
+                        <TodoListTitle headerName={this.props.title}
+                                       id={this.props.id}
+                                       deleteTodolist={this.props.deleteTodolist}/>
                         <AddNewItemForm addItem={this.addTask}/>
                     </div>
                     <TodoListTasks tasks={filteredTasks}
+                                   id={this.props.id}
                                    changeStatus={this.changeStatus}
                                    changeTitle={this.changeTitle}/>
                     <TodoListFooter filterValue={this.state.filterValue}
@@ -147,18 +132,26 @@ class TodoList extends React.Component {
 const mapDispatchToProps = (dispatch) => {
     return {
         addTask: (todolistId,newTask) => {
-            let action = {
-                type: 'ADD_TASK',
+            const action = {
+                type: 'ADD-TASK',
                 todolistId,
                 newTask
             }
             dispatch(action)
         },
         changeTask: (todolistId, taskId, obj) => {
-            let action = {
-                type: 'CHANGE_TASK',
+            const action = {
+                type: 'CHANGE-TASK',
+                todolistId,
                 taskId,
                 obj
+            }
+            dispatch(action)
+        },
+        deleteTodolist: (todolistId) => {
+            const action = {
+                type: 'DELETE-TODOLIST',
+                todolistId
             }
             dispatch(action)
         }
@@ -166,4 +159,5 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(null, mapDispatchToProps)(TodoList);
+
 

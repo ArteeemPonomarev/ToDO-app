@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {connect} from "react-redux";
 
 
 class TodoListTask extends React.Component {
@@ -47,12 +48,28 @@ class TodoListTask extends React.Component {
                     : <span onClick={this.activatedEditMode}>{this.props.task.id}: {this.props.task.title}</span>
                 }
                 <span>priority: {this.props.task.priority}</span>
+                <button onClick={() => {this.props.deleteTask(this.props.task.id, this.props.todolistId)}}>x</button>
             </div>
         );
     }
 }
 
-export default TodoListTask;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        deleteTask: (taskId, todolistId) => {
+            const action = {
+                type: 'DELETE-TASK',
+                taskId,
+                todolistId
+            }
+            dispatch(action)
+        }
+    }
+}
+
+const ConnectedTodoListTask = connect(null, mapDispatchToProps)(TodoListTask);
+
+export default ConnectedTodoListTask;
 
 TodoListTask.propTypes = {
     title: PropTypes.string,
