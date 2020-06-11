@@ -3,42 +3,18 @@ import './App.css'
 import TodoList from "./components/TodoList";
 import AddNewItemForm from "./components/AddNewItemForm";
 import {connect} from "react-redux";
+import {addTodolistAC} from "./store/reducer";
 
 
 class App extends React.Component {
     componentDidMount() {
-        this.restoreState()
+
     }
 
     nextTodoListId = 0;
 
     state = {
         todolists: []
-    }
-
-
-    saveState = () => {
-        let stateAsString = JSON.stringify(this.state);
-        localStorage.setItem('main-state', stateAsString)
-    }
-
-    restoreState = () => {
-        //let state = this.state
-        let state = {
-            todolists: []
-        }
-        let stateAsString = localStorage.getItem('main-state');
-        if (stateAsString) {
-            state = JSON.parse(stateAsString)
-        }
-        this.setState(state, () => {
-            this.state.todolists.forEach(tl => {
-                    if (tl.id >= this.nextTodoListId) {
-                        this.nextTodoListId = tl.id + 1;
-                    }
-                }
-            )
-        })
     }
 
 
@@ -85,12 +61,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         createTodolists: (newTodolist) => {
-            let action = {
-                type: 'ADD-TODOLIST',
-                newTodolist
-            };
-            dispatch(action)
-        }
+            dispatch(addTodolistAC(newTodolist))
+        },
+
     }
 }
 

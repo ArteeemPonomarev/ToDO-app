@@ -4,6 +4,7 @@ import TodoListTasks from './TodoListTasks';
 import TodoListFooter from './TodoListFooter';
 import TodoListTitle from "./TodoListTitle";
 import {connect} from "react-redux";
+import {addTaskAC, changeTaskAC, deleteTodolistAC, updateTaskAC} from "../store/reducer";
 
 
 class TodoList extends React.Component {
@@ -19,32 +20,6 @@ class TodoList extends React.Component {
 
     nextTaskId = 0;
 
-    //-----метод, который берет данные из стейта и передает в local storage----
-    saveState = () => {
-        // превращаем в строку, потому что Local storage может принять на хранение только строку
-        localStorage.setItem('our-state' + this.props.id, JSON.stringify(this.state))
-        //хотим сохранять всякий раз, когда что-то(state) меняем
-    }
-
-    //----метод, который берет данный из local storage и устанавливает их в стейт
-    restoreState = () => {
-        let state = {
-            tasks: [],
-            filterValue: 'All'
-        }
-        let stateAsString = localStorage.getItem('our-state' + this.props.id);
-        if (stateAsString) {
-            state = JSON.parse(stateAsString);
-        }
-        this.setState(state, () => {
-            this.state.tasks.forEach(task => {
-                if (task.id >= this.nextTaskId) {
-                    this.nextTaskId = task.id + 1;
-                }
-            })
-        });
-        //либо newTaskId помещаем в State и он тоже будет обновляться, после восстановления state
-    }
 
     addTask = (newTitle) => {
         //let newText = this.newTaskTitleRef.current.value;
@@ -68,7 +43,7 @@ class TodoList extends React.Component {
     };
 
     changeTask = (taskId, newPropobj) => {
-        this.props.changeTask(this.props.id, taskId, newPropobj)
+        this.props.updateTask(this.props.id, taskId, newPropobj)
     };
 
     changeStatus = (taskId, isDone) => {
@@ -77,6 +52,10 @@ class TodoList extends React.Component {
 
     changeTitle = (taskId, newTitle) => {
         this.props.changeTask(this.props.id,taskId, {title: newTitle})
+    }
+
+    deleteTodolist = () => {
+        this.props.deleteTodolist(this.props.id)
     }
 
     // changeTitle = (taskId, title) => {
@@ -132,28 +111,16 @@ class TodoList extends React.Component {
 const mapDispatchToProps = (dispatch) => {
     return {
         addTask: (todolistId,newTask) => {
-            const action = {
-                type: 'ADD-TASK',
-                todolistId,
-                newTask
-            }
-            dispatch(action)
+            dispatch(addTaskAC(todolistId, newTask))
         },
         changeTask: (todolistId, taskId, obj) => {
-            const action = {
-                type: 'CHANGE-TASK',
-                todolistId,
-                taskId,
-                obj
-            }
-            dispatch(action)
+            dispatch(changeTaskAC(todolistId, taskId, obj))
         },
         deleteTodolist: (todolistId) => {
-            const action = {
-                type: 'DELETE-TODOLIST',
-                todolistId
-            }
-            dispatch(action)
+            dispatch(deleteTodolistAC(todolistId))
+        },
+        updateTask: (todolistId, taskId, obj) => {
+            dispatch(updateTaskAC(todolistId, taskId, obj))
         }
     }
 }

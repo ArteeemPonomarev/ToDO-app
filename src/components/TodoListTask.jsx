@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
+import {deleteTaskAC} from "../store/reducer";
 
 
 class TodoListTask extends React.Component {
@@ -56,13 +57,8 @@ class TodoListTask extends React.Component {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        deleteTask: (taskId, todolistId) => {
-            const action = {
-                type: 'DELETE-TASK',
-                taskId,
-                todolistId
-            }
-            dispatch(action)
+        deleteTask: (todolistId, taskId) => {
+            dispatch(deleteTaskAC(todolistId, taskId))
         }
     }
 }
