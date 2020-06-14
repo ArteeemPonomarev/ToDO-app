@@ -4,23 +4,10 @@ const ADD_TASK = 'Todolist/Reducer/ADD_TASK';
 const DELETE_TASK = 'Todolist/Reducer/DELETE_TASK';
 const CHANGE_TASK = 'Todolist/Reducer/CHANGE_TASK';
 const UPDATE_TASK = 'Todolist/Reducer/UPDATE_TASK';
+const SET_TODOLISTS = 'Todolist/Reducer/SET_TODOLISTS';
 
 const initialState = {
-    todolists: [
-        // {
-        //     id: 0, title: 'What to learn', tasks: [
-        //         {id: 0, title: 'html', isDone: false, priority: 'low'},
-        //         {id: 1, title: 'css', isDone: false, priority: 'medium'},
-        //         {id: 2, title: 'js', isDone: false, priority: 'high'}
-        //     ]
-        // },
-        // {
-        //     id: 1, title: 'Frameworks', tasks: [
-        //         {id: 0, title: 'React', isDone: false, priority: 'high'},
-        //         {id: 1, title: 'Angular', isDone: false, priority: 'low'},
-        //         {id: 2, title: 'Vue', isDone: false, priority: 'low'}]
-        // },
-    ]
+    todolists: []
 }
 
 export const reducer = (state = initialState, action) => {
@@ -28,7 +15,7 @@ export const reducer = (state = initialState, action) => {
         case ADD_TODOLIST:
             return {
                 ...state,
-                todolists: [ action.newTodolist, ...state.todolists]
+                todolists: [ ...state.todolists, action.newTodolist]
             }
         case ADD_TASK:
             return {
@@ -59,6 +46,7 @@ export const reducer = (state = initialState, action) => {
                 })
             }
         case DELETE_TODOLIST:
+            debugger
             return {
                 ...state,
                 todolists: state.todolists.filter(tl => tl.id !== action.todolistId)
@@ -95,6 +83,11 @@ export const reducer = (state = initialState, action) => {
                     }
                 })
             }
+        case SET_TODOLISTS:
+            return {
+                ...state,
+                todolists: action.todolists
+            }
         default:
             return state
     }
@@ -122,4 +115,8 @@ export const changeTaskAC = (todolistId, taskId, obj) => {
 
 export const updateTaskAC = (todolistId, taskId, obj) => {
     return { type: UPDATE_TASK, todolistId, taskId, obj}
+}
+
+export const setTodolistsAC = (todolists) => {
+    return {type: SET_TODOLISTS, todolists}
 }

@@ -5,25 +5,34 @@ import TodoListFooter from './TodoListFooter';
 import TodoListTitle from "./TodoListTitle";
 import {connect} from "react-redux";
 import {addTaskAC, changeTaskAC, deleteTodolistAC, updateTaskAC} from "../store/reducer";
+import axios from 'axios';
 
 
 class TodoList extends React.Component {
 
     componentDidMount() {
-        //this.restoreState();
     }
 
     state = {
-        tasks: [ ],
         filterValue: 'All'
     };
 
     nextTaskId = 0;
 
-
     addTask = (newTitle) => {
-        //let newText = this.newTaskTitleRef.current.value;
-        //this.newTaskTitleRef.current.value = '';
+        axios.post(`https://social-network.samuraijs.com/api/1.1/todo-lists/${this.props.id}/tasks`, {
+                title: newTitle
+            },
+            {
+            withCredentials: true,
+            headers: {'API-KEY': '9b6aada9-34d3-4135-a32f-7e9aacf37623'}
+        })
+            .then(res => {
+                if (res.data.resultCode === 0) {
+                    debugger
+                    this.props.deleteTodolist(this.props.id);
+                }
+            });
         let newTask = {
             id: this.nextTaskId,
             isDone: false,
@@ -32,10 +41,6 @@ class TodoList extends React.Component {
         }
         this.nextTaskId++;
         this.props.addTask(this.props.id, newTask)
-       // this.nextTaskId++;//---по длинне массива можно брать
-        //let newTasks = [...this.state.tasks, newTask];
-       /// this.setState({tasks: newTasks}, this.saveState);
-        //this.setState принимает вторым параметром callback,который изменится строго после того, как изменится state
     };
 
     changeFilter = (newFilterValue) => {
@@ -47,33 +52,33 @@ class TodoList extends React.Component {
     };
 
     changeStatus = (taskId, isDone) => {
-        this.props.changeTask(this.props.id,taskId, {isDone: isDone})
+        this.props.changeTask(this.props.id, taskId, {isDone: isDone})
     };
 
     changeTitle = (taskId, newTitle) => {
-        this.props.changeTask(this.props.id,taskId, {title: newTitle})
+        this.props.changeTask(this.props.id, taskId, {title: newTitle})
     }
 
     deleteTodolist = () => {
-        this.props.deleteTodolist(this.props.id)
+        axios.delete(`https://social-network.samuraijs.com/api/1.1/todo-lists/${this.props.id}`, {
+            withCredentials: true,
+            headers: {'API-KEY': '9b6aada9-34d3-4135-a32f-7e9aacf37623'}
+        })
+            .then(res => {
+                if (res.data.resultCode === 0) {
+                    debugger
+                    this.props.deleteTodolist(this.props.id);
+                }
+            });
     }
-
-    // changeTitle = (taskId, title) => {
-    //     let newTasks = this.state.tasks.map(t => {
-    //         if (t.id === taskId) {
-    //             return {...t, title: title}
-    //         }
-    //         return t
-    //     })
-    //     this.setState({tasks: newTasks})
-    // };
 
 
     render = () => {
 
+        let {tasks = []} = this.props
 
         let filteredTasks =
-            this.props.tasks.filter(t => {
+            tasks.filter(t => {
                 switch (this.state.filterValue) {
                     case 'Active':
                         return !t.isDone;
@@ -92,7 +97,7 @@ class TodoList extends React.Component {
                     <div className="todoList-header">
                         <TodoListTitle headerName={this.props.title}
                                        id={this.props.id}
-                                       deleteTodolist={this.props.deleteTodolist}/>
+                                       deleteTodolist={this.deleteTodolist}/>
                         <AddNewItemForm addItem={this.addTask}/>
                     </div>
                     <TodoListTasks tasks={filteredTasks}
@@ -110,7 +115,7 @@ class TodoList extends React.Component {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        addTask: (todolistId,newTask) => {
+        addTask: (todolistId, newTask) => {
             dispatch(addTaskAC(todolistId, newTask))
         },
         changeTask: (todolistId, taskId, obj) => {
