@@ -31,12 +31,15 @@ class TodoListTask extends React.Component {
     }
 
 
+
     render = () => {
-        let classForTask = this.props.task.isDone === true ? 'todoList-task done' : 'todoList-task';
+        let isStatus = this.props.task.status === 2
+
+        let classForTask = isStatus ? 'todoList-task done' : 'todoList-task';
 
         return (
             <div className={classForTask}>
-                <input type="checkbox" checked={this.props.task.isDone}
+                <input type="checkbox" checked={isStatus}
                        onChange={this.onIsDoneChanged}
                 />
                 {this.state.isEditMode
@@ -46,7 +49,7 @@ class TodoListTask extends React.Component {
                         type='text'
                         value={this.props.task.title}
                         onChange={this.onTitleChanged}/>
-                    : <span onClick={this.activatedEditMode}>{this.props.task.id}: {this.props.task.title}</span>
+                    : <span onClick={this.activatedEditMode}>{this.props.task.title} </span>
                 }
                 <span>priority: {this.props.task.priority}</span>
                 <button onClick={() => {this.props.deleteTask(this.props.task.id, this.props.todolistId)}}>x</button>
@@ -55,17 +58,11 @@ class TodoListTask extends React.Component {
     }
 }
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        deleteTask: (todolistId, taskId) => {
-            dispatch(deleteTaskAC(todolistId, taskId))
-        }
-    }
-}
 
-const ConnectedTodoListTask = connect(null, mapDispatchToProps)(TodoListTask);
 
-export default ConnectedTodoListTask;
+
+
+export default TodoListTask;
 
 TodoListTask.propTypes = {
     title: PropTypes.string,

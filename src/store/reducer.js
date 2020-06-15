@@ -5,6 +5,7 @@ const DELETE_TASK = 'Todolist/Reducer/DELETE_TASK';
 const CHANGE_TASK = 'Todolist/Reducer/CHANGE_TASK';
 const UPDATE_TASK = 'Todolist/Reducer/UPDATE_TASK';
 const SET_TODOLISTS = 'Todolist/Reducer/SET_TODOLISTS';
+const SET_TASKS = 'Todolist/Reducer/SET_TASKS';
 
 const initialState = {
     todolists: []
@@ -23,7 +24,7 @@ export const reducer = (state = initialState, action) => {
                     if (todo.id !== action.todolistId) {
                         return todo
                     } else {
-                        return {...todo, tasks: [...todo.tasks, action.newTask]}
+                        return {...todo, tasks: [ action.newTask, ...todo.tasks]}
                     }
                 })
             }
@@ -46,7 +47,6 @@ export const reducer = (state = initialState, action) => {
                 })
             }
         case DELETE_TODOLIST:
-            debugger
             return {
                 ...state,
                 todolists: state.todolists.filter(tl => tl.id !== action.todolistId)
@@ -86,7 +86,24 @@ export const reducer = (state = initialState, action) => {
         case SET_TODOLISTS:
             return {
                 ...state,
-                todolists: action.todolists
+                todolists: action.todolists.map(todolist => {
+                    return {...todolist, tasks: []}
+                })
+            }
+        case SET_TASKS:
+            return {
+                ...state,
+                todolists: state.todolists.map(tl => {
+                    if (tl.id === action.todolistId) {
+                        return {
+                            ...tl,
+                            tasks: action.tasks
+                        }
+                    } else {
+                        return tl
+
+                    }
+                })
             }
         default:
             return state
@@ -119,4 +136,9 @@ export const updateTaskAC = (todolistId, taskId, obj) => {
 
 export const setTodolistsAC = (todolists) => {
     return {type: SET_TODOLISTS, todolists}
+}
+
+export const setTasksAC = (todolistId, tasks) => {
+    return {type: SET_TASKS
+        , todolistId, tasks }
 }

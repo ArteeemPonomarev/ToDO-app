@@ -15,12 +15,9 @@ class App extends React.Component {
     restoreState = () => {
         axios.get("https://social-network.samuraijs.com/api/1.1/todo-lists", {withCredentials: true})
             .then(res => {
-                debugger
                 this.props.setTodolists(res.data);
             });
     }
-
-    nextTodoListId = 0;
 
 
     addTodoList = (title) => {
@@ -30,12 +27,10 @@ class App extends React.Component {
         })
             .then(res => {
                 if ( res.data.resultCode === 0 ) {
-                    debugger
                     this.props.addTodolists(res.data.data.item);
                 }
             });
 
-        this.nextTodoListId++;
     }
 
 
