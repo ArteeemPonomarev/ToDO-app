@@ -24,25 +24,7 @@ export const reducer = (state = initialState, action) => {
                     if (todo.id !== action.todolistId) {
                         return todo
                     } else {
-                        return {...todo, tasks: [ action.newTask, ...todo.tasks]}
-                    }
-                })
-            }
-        case CHANGE_TASK:
-            return {
-                ...state, todolists: state.todolists.map(todo => {
-                    if (todo.id !== action.todolistId) {
-                        return todo
-                    } else {
-                        return {
-                            ...todo, tasks: todo.tasks.map(task => {
-                                if (task.id !== action.taskId) {
-                                    return task
-                                } else {
-                                    return {...task, ...action.obj}
-                                }
-                            })
-                        }
+                        return {...todo, tasks: [...todo.tasks, action.newTask]}
                     }
                 })
             }
@@ -69,12 +51,14 @@ export const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 todolists: state.todolists.map(todo => {
-                    if (todo.id === action.todolistId) {
+                    if (todo.id === action.newTask.todoListId) {
                         return {
                             ...todo,
                             tasks: todo.tasks.map(t => {
-                                if (t.id === action.taskId) {
-                                    return {...t, ...action.obj }
+                                if (t.id === action.newTask.id) {
+                                    return {...action.newTask }
+                                } else {
+                                    return t
                                 }
                             })
                         }
@@ -126,12 +110,9 @@ export const deleteTaskAC = (todolistId, taskId) => {
     return { type: DELETE_TASK, todolistId, taskId}
 }
 
-export const changeTaskAC = (todolistId, taskId, obj) => {
-    return { type: CHANGE_TASK, todolistId, taskId, obj}
-}
 
-export const updateTaskAC = (todolistId, taskId, obj) => {
-    return { type: UPDATE_TASK, todolistId, taskId, obj}
+export const updateTaskAC = (newTask) => {
+    return { type: UPDATE_TASK, newTask}
 }
 
 export const setTodolistsAC = (todolists) => {
