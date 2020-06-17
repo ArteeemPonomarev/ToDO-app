@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {connect} from "react-redux";
-import {deleteTaskAC} from "../store/reducer";
 
 
 class TodoListTask extends React.Component {
 
     state = {
-        isEditMode: false
+        isEditMode: false,
+        title: this.props.task.title
     };
 
     activatedEditMode = () => {
@@ -17,9 +16,8 @@ class TodoListTask extends React.Component {
     };
 
     deActivatedEditMode = () => {
-        this.setState({
-            isEditMode: false
-        })
+        this.setState({ isEditMode: false });
+        this.props.changeTitle(this.props.task, this.state.title)
     };
 
     onIsDoneChanged = (event) => {
@@ -27,7 +25,7 @@ class TodoListTask extends React.Component {
     };
 
     onTitleChanged = (event) => {
-        this.props.changeTitle(this.props.task, event.currentTarget.value)
+        this.setState({title: event.currentTarget.value})
     }
 
 
@@ -47,7 +45,7 @@ class TodoListTask extends React.Component {
                         autoFocus={true} //курсор сразу в инпуте
                         onBlur={this.deActivatedEditMode}
                         type='text'
-                        value={this.props.task.title}
+                        value={this.state.title}
                         onChange={this.onTitleChanged}/>
                     : <span onClick={this.activatedEditMode}>{this.props.task.title} </span>
                 }
