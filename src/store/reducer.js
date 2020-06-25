@@ -1,3 +1,5 @@
+import {api} from "../api";
+
 const ADD_TODOLIST = 'Todolist/Reducer/ADD_TODOLIST';
 const DELETE_TODOLIST = 'Todolist/Reducer/DELETE_TODOLIST';
 const ADD_TASK = 'Todolist/Reducer/ADD_TASK';
@@ -94,13 +96,10 @@ export const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 todolists: state.todolists.map(tl => {
-                    if (tl.id != action.todolistId) {
+                    if (tl.id != action.todolist.id) {
                         return tl
                     } else {
-                        return {
-                            ...tl,
-                            title: action.title
-                        }
+                        return action.todolist
                     }
                 })
             }
@@ -138,6 +137,67 @@ export const setTasksAC = (todolistId, tasks) => {
         , todolistId, tasks }
 }
 
-export const changeTaskTitle = (todolistId, title) => {
-    return { type: CHANGE_TASK_TITLE, todolistId, title}
+export const changeTaskTitle = (todolist) => {
+    return { type: CHANGE_TASK_TITLE, todolist}
+}
+
+//Thunk
+
+export const setTodolistsTC = () => (dispatch) => {
+    api.getTodolists()
+        .then(res => {
+            dispatch(setTodolistsAC(res));
+        });
+}
+export const addTodoList = (title) => (dispatch) => {
+    api.createTodolist(title)
+        .then(res => {
+            if (res.resultCode === 0) {
+                dispatch(addTodolistAC(res.data.item));
+            }
+        });
+}
+
+export const getTasks = (todolistId) => (dispatch) => {
+    api.getTasks(todolistId)
+        .then(res => {
+            if (!res.error) {
+                dispatch(setTasksAC(todolistId, res.items))
+            }
+        })
+}
+
+export const addTask = (newTitle, todolistId) => (dispatch) => {
+    api.addTask(newTitle, todolistId)
+        .then(res => {
+            if (res.resultCode === 0) {
+                dispatch(addTaskAC(todolistId, res.data.item));
+            }
+        });
+}
+export const changeTask = (newTask, todolistId) => (dispatch) => {
+    api.changeTask(newTask, todolistId)
+        .then(res => {
+            if (res.resultCode === 0) {
+                dispatch(updateTaskAC(res.data.item));
+            }
+        })
+}
+
+export const deleteTodolist = (todolistId) => (dispatch) => {
+    api.deleteTodolist(todolistId)
+        .then(res => {
+            if (res.resultCode === 0) {
+                dispatch(deleteTodolistAC(todolistId));
+            }
+        });
+}
+
+export const deleteTask =(todolistId, taskId) => (dispatch) => {
+    api.deleteTask(taskId, todolistId)
+        .then(res => {
+            if (res.resultCode === 0) {
+                dispatch(deleteTaskAC(todolistId, taskId));
+            }
+        });
 }

@@ -8,7 +8,7 @@ class TodoListTitle extends React.Component {
 
     state = {
         isEditMode: false,
-        title: this.props.headerName
+        title: this.props.title
     }
 
     activateMode = () => {
@@ -17,13 +17,13 @@ class TodoListTitle extends React.Component {
 
     deactivateMode = () => {
         this.setState({isEditMode: false});
-        axios.put(`https://social-network.samuraijs.com/api/1.0/todo-lists/${this.props.id}`, {title: this.state.title}, {
+        axios.put(`https://social-network.samuraijs.com/api/1.1/todo-lists/${this.props.id}`, {title: this.state.title}, {
             withCredentials: true,
             headers: {'API-KEY': '9b6aada9-34d3-4135-a32f-7e9aacf37623'}
         }).then(res => {
             if (res.data.resultCode === 0) {
                 debugger
-                this.props.changeTitle(this.props.id, res.data.data.title)
+                this.props.changeTitle(res.data.data)
             }
         })
     }
@@ -38,7 +38,7 @@ class TodoListTitle extends React.Component {
             <h3 className="todoList-header__title">
                 {!this.state.isEditMode
                     ? <span >
-                        <span onClick={this.activateMode}>{this.state.title}</span> <button onClick={() => {this.props.deleteTodolist(this.props.id)}}>x</button>
+                        <span onClick={this.activateMode}>{this.props.title}</span> <button onClick={() => {this.props.deleteTodolist(this.props.id)}}>x</button>
                         </span>
                     : <span>
                         <input type='text'
@@ -60,8 +60,8 @@ class TodoListTitle extends React.Component {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        changeTitle: (todolistId,title) => {
-            dispatch(changeTaskTitle(todolistId,title))
+        changeTitle: (todolist) => {
+            dispatch(changeTaskTitle(todolist))
         }
     }
 }
