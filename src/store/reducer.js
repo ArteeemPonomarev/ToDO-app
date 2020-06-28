@@ -7,7 +7,7 @@ const DELETE_TASK = 'Todolist/Reducer/DELETE_TASK';
 const UPDATE_TASK = 'Todolist/Reducer/UPDATE_TASK';
 const SET_TODOLISTS = 'Todolist/Reducer/SET_TODOLISTS';
 const SET_TASKS = 'Todolist/Reducer/SET_TASKS';
-const CHANGE_TASK_TITLE = 'Todolist/Reducer/CHANGE_TASK_TITLE';
+const CHANGE_TODOLIST_TITLE = 'Todolist/Reducer/CHANGE_TODOLIST_TITLE';
 
 const initialState = {
     todolists: []
@@ -91,15 +91,17 @@ export const reducer = (state = initialState, action) => {
                     }
                 })
             }
-        case CHANGE_TASK_TITLE:
-            debugger
+        case CHANGE_TODOLIST_TITLE:
             return {
                 ...state,
                 todolists: state.todolists.map(tl => {
-                    if (tl.id != action.todolist.id) {
+                    if (tl.id !== action.todolist.id) {
                         return tl
                     } else {
-                        return action.todolist
+                        return {
+                            ...tl,
+                            title: action.todolist.title
+                        }
                     }
                 })
             }
@@ -107,41 +109,35 @@ export const reducer = (state = initialState, action) => {
             return state
     }
 }
+//Action Creators
 
 export const addTodolistAC = (newTodolist) => {
     return { type: ADD_TODOLIST, newTodolist}
 }
-
 export const deleteTodolistAC = (todolistId) => {
     return { type: DELETE_TODOLIST, todolistId}
 }
-
 export const addTaskAC = (todolistId, newTask) => {
     return { type: ADD_TASK, todolistId, newTask}
 }
-
 export const deleteTaskAC = (todolistId, taskId) => {
     return { type: DELETE_TASK, todolistId, taskId}
 }
-
 export const updateTaskAC = (newTask) => {
     return { type: UPDATE_TASK, newTask}
 }
-
 export const setTodolistsAC = (todolists) => {
     return {type: SET_TODOLISTS, todolists}
 }
-
 export const setTasksAC = (todolistId, tasks) => {
     return {type: SET_TASKS
         , todolistId, tasks }
 }
-
-export const changeTaskTitle = (todolist) => {
-    return { type: CHANGE_TASK_TITLE, todolist}
+export const changeTodolistTitleAC = (todolist) => {
+    return { type: CHANGE_TODOLIST_TITLE, todolist}
 }
 
-//Thunk
+//Thunk Creators
 
 export const setTodolistsTC = () => (dispatch) => {
     api.getTodolists()
@@ -157,7 +153,6 @@ export const addTodoList = (title) => (dispatch) => {
             }
         });
 }
-
 export const getTasks = (todolistId) => (dispatch) => {
     api.getTasks(todolistId)
         .then(res => {
@@ -166,7 +161,6 @@ export const getTasks = (todolistId) => (dispatch) => {
             }
         })
 }
-
 export const addTask = (newTitle, todolistId) => (dispatch) => {
     api.addTask(newTitle, todolistId)
         .then(res => {
@@ -183,7 +177,6 @@ export const changeTask = (newTask, todolistId) => (dispatch) => {
             }
         })
 }
-
 export const deleteTodolist = (todolistId) => (dispatch) => {
     api.deleteTodolist(todolistId)
         .then(res => {
@@ -192,12 +185,19 @@ export const deleteTodolist = (todolistId) => (dispatch) => {
             }
         });
 }
-
-export const deleteTask =(todolistId, taskId) => (dispatch) => {
+export const deleteTask = (todolistId, taskId) => (dispatch) => {
     api.deleteTask(taskId, todolistId)
         .then(res => {
             if (res.resultCode === 0) {
                 dispatch(deleteTaskAC(todolistId, taskId));
+            }
+        });
+}
+export const changeTodolistTitle = (title, todolistId) => (dispatch) => {
+    api.changeTodolistTitle(title, todolistId)
+        .then(res => {
+            if (res.resultCode === 0) {
+                dispatch(changeTodolistTitleAC({title: title, id: todolistId}))
             }
         });
 }

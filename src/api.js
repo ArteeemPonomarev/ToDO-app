@@ -34,5 +34,9 @@ export const api = {
     deleteTask(taskId, todolistId) {
         return instance.delete(`/${todolistId}/tasks/${taskId}`)
             .then(res => res.data)
+    },
+    changeTodolistTitle(title, todolistId) {
+        return instance.put(`/${todolistId}`, {title})
+            .then(res => res.data)
     }
 }
