@@ -8,11 +8,6 @@ class TodoListFooter extends React.Component {
         isHidden: false,
     };
 
-    onHideClick = () => {
-        this.setState({
-            isHidden: !this.state.isHidden
-        })
-    }
 
     onAllFilterClick = () => {
         this.props.changeFilter("All")

@@ -26,7 +26,7 @@ class TodoListTitle extends React.Component {
         return (
             <div>
                 {!this.state.isEditMode
-                    ? <h3 className = 'todoList-header__title'
+                    ? <h3 className='todoList-header__title'
                           onClick={this.activateMode}>{this.props.title}
                         <button onClick={this.props.deleteTodolist}>x</button>
                     </h3>

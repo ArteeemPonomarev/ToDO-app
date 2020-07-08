@@ -9,11 +9,9 @@ import {
     changeTodolistTitle, deleteTask,
     deleteTodolist, getTasks,
 } from "../store/reducer";
-import {api} from "../api";
 
 
 class TodoList extends React.Component {
-
     componentDidMount() {
         this.restoreState();
     }
@@ -25,7 +23,6 @@ class TodoList extends React.Component {
     state = {
         filterValue: 'All'
     };
-
 
     addTask = (newTitle) => {
         this.props.addTask(this.props.id, newTitle)
@@ -109,7 +106,7 @@ const mapDispatchToProps = (dispatch) => {
         deleteTodolist: (todolistId) => {
             dispatch(deleteTodolist(todolistId))
         },
-        changeTask: (newTask,todolistId) => {
+        changeTask: (newTask, todolistId) => {
             dispatch(changeTask(newTask, todolistId))
         },
         getTasks: (todolistId) => {
