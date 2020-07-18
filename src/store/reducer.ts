@@ -1,6 +1,5 @@
 import {api} from "../api";
 import {TaskType, TodoType, TodoUpdateObject} from "../types/entities";
-import {Dispatch} from "redux";
 import {ThunkAction, ThunkDispatch} from "redux-thunk";
 import {AppStateType} from "./store";
 
@@ -97,7 +96,6 @@ const reducer = (state: InitialStateType = initialState, action: ActionType):Ini
                         }
                     } else {
                         return tl
-
                     }
                 })
             }
@@ -110,7 +108,7 @@ const reducer = (state: InitialStateType = initialState, action: ActionType):Ini
                     } else {
                         return {
                             ...tl,
-                            title: action.todolist.title
+                            title: action.todolist.title || tl.title
                         }
                     }
                 })

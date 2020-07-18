@@ -38,7 +38,7 @@ type CommonApiType<T> = {
 
 export const api = {
     createTodolist(title: string) {
-        return instance.post<CommonApiType<TodoType>>('', {title: title})
+        return instance.post<CommonApiType<{item:TodoType}>>('', {title: title})
             .then(res => res.data)
     },
     getTodolists() {
@@ -54,7 +54,7 @@ export const api = {
             .then(res => res.data)
     },
     addTask(newTitle: string, todolistId: string) {
-        return instance.post<CommonApiType<TaskType>>(`/${todolistId}/tasks`, {title: newTitle})
+        return instance.post<CommonApiType<{item:TaskType}>>(`/${todolistId}/tasks`, {title: newTitle})
             .then(res => res.data)
     },
     changeTask(newTask: TodoUpdateObject, todolistId: string) {

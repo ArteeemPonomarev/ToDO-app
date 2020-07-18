@@ -1,4 +1,5 @@
 import React, {ChangeEvent} from 'react';
+import {Button} from "@material-ui/core";
 
 type OwnPropsType = {
     addItem: (newTitle: string) => void
@@ -61,7 +62,8 @@ class AddNewItemForm extends React.Component<OwnPropsType, StateType> {
                     value={this.state.title}
                     onKeyPress={this.onKeyPressAction}/>
 
-                <button onClick={this.onAddItemClick}>Add</button>
+                {/*<button onClick={this.onAddItemClick}>Add</button>*/}
+                <Button onClick={this.onAddItemClick} variant={'contained'} color={'primary'} size={'small'}>Add</Button>
             </div>
         );
     }

@@ -9,9 +9,31 @@ import {
     changeTodolistTitle, deleteTask,
     deleteTodolist, getTasks,
 } from "../store/reducer";
+import {TaskType} from "../types/entities";
+import {AppStateType} from "../store/store";
 
 
-class TodoList extends React.Component {
+type MapDispatchToPropsType = {
+    addTask: (todolistId: string, newTitle: string) => void
+    deleteTodolist: (todolistId: string) => void
+    changeTask: (newTask: TaskType, todolistId: string) => void
+    getTasks: (todolistId: string) => void
+    deleteTask: (todolistId: string, taskId: string) => void
+    changeTodolistTitle: (title: string, todolistId: string) => void
+}
+
+type StateType = {
+    filterValue: string
+}
+
+type OwnPropsType = {
+    id: string
+    title: string
+    tasks: Array<TaskType>
+}
+
+
+class TodoList extends React.Component<OwnPropsType & MapDispatchToPropsType, StateType> {
     componentDidMount() {
         this.restoreState();
     }
@@ -24,23 +46,23 @@ class TodoList extends React.Component {
         filterValue: 'All'
     };
 
-    addTask = (newTitle) => {
+    addTask = (newTitle: string): void => {
         this.props.addTask(this.props.id, newTitle)
     };
 
-    changeFilter = (newFilterValue) => {
+    changeFilter = (newFilterValue: string): void => {
         this.setState({filterValue: newFilterValue})
     };
 
-    changeTask = (newTask) => {
+    changeTask = (newTask: TaskType): void => {
         this.props.changeTask(newTask, this.props.id)
     };
 
-    changeStatus = (newTask, status) => {
+    changeStatus = (newTask: TaskType, status: boolean) => {
         this.changeTask({...newTask, status: status === true ? 2 : 0})
     };
 
-    changeTitle = (newTask, newTitle) => {
+    changeTitle = (newTask: TaskType, newTitle: string) => {
         this.changeTask({...newTask, title: newTitle})
     }
 
@@ -48,11 +70,11 @@ class TodoList extends React.Component {
         this.props.deleteTodolist(this.props.id)
     }
 
-    deleteTask = (taskId) => {
+    deleteTask = (taskId: string) => {
         this.props.deleteTask(this.props.id, taskId)
     }
 
-    changeTodolistTitle = (title) => {
+    changeTodolistTitle = (title: string) => {
         this.props.changeTodolistTitle(title, this.props.id)
     }
 
@@ -64,9 +86,9 @@ class TodoList extends React.Component {
             tasks.filter(t => {
                 switch (this.state.filterValue) {
                     case 'Active':
-                        return !t.isDone;
+                        return t.status === 0;
                     case 'Completed':
-                        return t.isDone;
+                        return t.status === 2;
                     case 'All':
                         return true;
                     default:
@@ -98,29 +120,29 @@ class TodoList extends React.Component {
     }
 }
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch: any) => {
     return {
-        addTask: (todolistId, newTitle) => {
+        addTask: (todolistId: string, newTitle: string) => {
             dispatch(addTask(newTitle, todolistId))
         },
-        deleteTodolist: (todolistId) => {
+        deleteTodolist: (todolistId: string) => {
             dispatch(deleteTodolist(todolistId))
         },
-        changeTask: (newTask, todolistId) => {
+        changeTask: (newTask: TaskType, todolistId: string) => {
             dispatch(changeTask(newTask, todolistId))
         },
-        getTasks: (todolistId) => {
+        getTasks: (todolistId: string) => {
             dispatch(getTasks(todolistId))
         },
-        deleteTask: (todolistId, taskId) => {
+        deleteTask: (todolistId: string, taskId: string) => {
             dispatch(deleteTask(todolistId, taskId))
         },
-        changeTodolistTitle: (title, todolistId) => {
+        changeTodolistTitle: (title: string, todolistId: string) => {
             dispatch(changeTodolistTitle(title, todolistId))
         }
     }
 }
 
-export default connect(null, mapDispatchToProps)(TodoList);
+export default connect<{}, MapDispatchToPropsType, OwnPropsType, AppStateType>(null, mapDispatchToProps)(TodoList);
 
 

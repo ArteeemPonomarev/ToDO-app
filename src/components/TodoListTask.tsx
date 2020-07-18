@@ -1,8 +1,22 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import {TaskType} from "../types/entities";
+import {IconButton} from "@material-ui/core";
+import {Delete} from "@material-ui/icons";
 
+type StateType = {
+    isEditMode: boolean
+    title: string
+}
 
-class TodoListTask extends React.Component {
+type OwnPropsType = {
+    task: TaskType
+    todolistId: string
+    changeTitle: (task: TaskType, title: string) => void
+    changeStatus: (task: TaskType, checked: boolean) => void
+    deleteTask: (id: string, todoId: string) => void
+}
+
+class TodoListTask extends React.Component<OwnPropsType, StateType> {
 
     state = {
         isEditMode: false,
@@ -20,11 +34,11 @@ class TodoListTask extends React.Component {
         this.props.changeTitle(this.props.task, this.state.title)
     };
 
-    onIsDoneChanged = (event) => {
+    onIsDoneChanged = (event: React.ChangeEvent<HTMLInputElement>): void => {
         this.props.changeStatus(this.props.task, event.currentTarget.checked);
     };
 
-    onTitleChanged = (event) => {
+    onTitleChanged = (event: React.ChangeEvent<HTMLInputElement>): void => {
         this.setState({title: event.currentTarget.value})
     }
 
@@ -68,10 +82,15 @@ class TodoListTask extends React.Component {
                     : <span onClick={this.activatedEditMode}>{this.props.task.title} </span>
                 }
                 <span>priority: {priorityTitle}</span>
-                <button onClick={() => {
+                {/*<button onClick={() => {*/}
+                {/*    this.props.deleteTask(this.props.task.id, this.props.todolistId)*/}
+                {/*}}>x*/}
+                {/*</button>*/}
+                <IconButton onClick={() => {
                     this.props.deleteTask(this.props.task.id, this.props.todolistId)
-                }}>x
-                </button>
+                }}>
+                    <Delete/>
+                </IconButton>
             </div>
         );
     }
@@ -80,7 +99,3 @@ class TodoListTask extends React.Component {
 
 export default TodoListTask;
 
-TodoListTask.propTypes = {
-    title: PropTypes.string,
-    priority: PropTypes.string,
-};
