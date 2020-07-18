@@ -1,5 +1,6 @@
 import React, {ChangeEvent} from 'react';
-import {Button} from "@material-ui/core";
+import {IconButton, TextField} from "@material-ui/core";
+import {ControlPoint} from "@material-ui/icons";
 
 type OwnPropsType = {
     addItem: (newTitle: string) => void
@@ -54,16 +55,26 @@ class AddNewItemForm extends React.Component<OwnPropsType, StateType> {
 
         return (
             <div className="todoList-newTaskForm">
-                <input
-                    type="text"
+                {/*<input*/}
+                {/*    type="text"*/}
+                {/*    onChange={this.onInputChange}*/}
+                {/*    className={classForError}*/}
+                {/*    placeholder="New item name"*/}
+                {/*    value={this.state.title}*/}
+                {/*    onKeyPress={this.onKeyPressAction}/>*/}
+                <TextField
+                    variant={'outlined'}
+                    label={'Type value'}
                     onChange={this.onInputChange}
                     className={classForError}
-                    placeholder="New item name"
                     value={this.state.title}
-                    onKeyPress={this.onKeyPressAction}/>
-
+                    onKeyPress={this.onKeyPressAction}
+                    error={this.state.error}
+                    helperText={this.state.error && 'Title is required.'}/>
                 {/*<button onClick={this.onAddItemClick}>Add</button>*/}
-                <Button onClick={this.onAddItemClick} variant={'contained'} color={'primary'} size={'small'}>Add</Button>
+                <IconButton onClick={this.onAddItemClick} color={'primary'} size={'small'}>
+                    <ControlPoint />
+                </IconButton>
             </div>
         );
     }

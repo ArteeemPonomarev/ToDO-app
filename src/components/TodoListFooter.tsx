@@ -1,4 +1,5 @@
 import React from 'react';
+import {Button} from "@material-ui/core";
 
 type StateType = {
     isHidden: boolean
@@ -47,19 +48,28 @@ class TodoListFooter extends React.Component<OwnPropsType, StateType> {
         let classForCompleted = this.props.filterValue === "Completed" ? "filter-active" : "";
         let classForActive = this.props.filterValue === "Active" ? "filter-active" : "";
 
+        const variantForBtnAll = this.props.filterValue === 'All' ? 'contained' : 'text';
+        const variantForBtnActive = this.props.filterValue === 'Active' ? 'contained' : 'text';
+        const variantForBtnCompleted = this.props.filterValue === 'Completed' ? 'contained' : 'text';
+
         return (
             <div className="todoList-footer"> 
                 {!this.state.isHidden && <div>
-                    <button className = { classForAll }
+                    <Button variant = {variantForBtnAll}
+                            className = { classForAll }
                             onClick = { this.onAllFilterClick }>
                         All
-                    </button>
-                    <button className = { classForCompleted }
+                    </Button>
+                    <Button variant = {variantForBtnCompleted}
+                            color={'primary'}
+                            className = { classForCompleted }
                             onClick = { this.onCompletedFilterClick }
-                    > Completed </button>
-                    <button className = { classForActive }
+                    > Completed </Button>
+                    <Button variant = {variantForBtnActive}
+                            color={'secondary'}
+                            className = { classForActive }
                             onClick = { this.onActiveFilterClick }
-                    > Active </button>
+                    > Active </Button>
                 </div>}
                 {!this.state.isHidden && <span onClick={this.onShowFiltersClick}>hide</span>}
                 {/* //---условный рендеринг--- */}

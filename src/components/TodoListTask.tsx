@@ -1,6 +1,6 @@
 import React from 'react';
 import {TaskType} from "../types/entities";
-import {IconButton} from "@material-ui/core";
+import {Checkbox, IconButton, TextField} from "@material-ui/core";
 import {Delete} from "@material-ui/icons";
 
 type StateType = {
@@ -69,14 +69,13 @@ class TodoListTask extends React.Component<OwnPropsType, StateType> {
 
         return (
             <div className={classForTask}>
-                <input type="checkbox" checked={isStatus}
+                <Checkbox  checked={isStatus}
                        onChange={this.onIsDoneChanged}
                 />
                 {this.state.isEditMode
-                    ? <input
+                    ? <TextField
                         autoFocus={true}
                         onBlur={this.deActivatedEditMode}
-                        type='text'
                         value={this.state.title}
                         onChange={this.onTitleChanged}/>
                     : <span onClick={this.activatedEditMode}>{this.props.task.title} </span>

@@ -1,4 +1,6 @@
 import React from 'react';
+import {IconButton} from "@material-ui/core";
+import {Delete} from "@material-ui/icons";
 
 type StateType = {
     isEditMode: boolean
@@ -40,7 +42,10 @@ class TodoListTitle extends React.Component<OwnPropsType,StateType> {
                 {!this.state.isEditMode
                     ? <h3 className='todoList-header__title'
                           onClick={this.activateMode}>{this.props.title}
-                        <button onClick={this.props.deleteTodolist}>x</button>
+                        {/*<button onClick={this.props.deleteTodolist}>x</button>*/}
+                        <IconButton>
+                            <Delete onClick={this.props.deleteTodolist}/>
+                        </IconButton>
                     </h3>
                     : <input type='text'
                              autoFocus={true}

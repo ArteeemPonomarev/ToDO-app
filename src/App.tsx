@@ -6,12 +6,14 @@ import {connect} from "react-redux";
 import {addTodoList, setTodolistsTC} from "./store/reducer";
 import {AppStateType} from "./store/store";
 import {TodoType} from "./types/entities";
+import {AppBar, Toolbar, IconButton, Typography, Button, Container, Grid, Paper} from "@material-ui/core";
+import {Menu} from '@material-ui/icons';
 
 type MapStatePropsType = {
     todolists: Array<TodoType>
 }
 type MapDispatchPropsType = {
-    getTodo:() => void
+    getTodo: () => void
     addTodolists: (title: string) => void
 }
 
@@ -29,20 +31,33 @@ class App extends React.Component<MapStatePropsType & MapDispatchPropsType> {
     }
 
     render = () => {
-        const todolists = this.props.todolists.map(tl => <TodoList key={tl.id}
-                                                                   id={tl.id}
-                                                                   title={tl.title}
-                                                                   tasks={tl.tasks}/>)
-
+        const todolists = this.props.todolists.map(tl => <Grid item>
+            <Paper style={{padding: '10px'}}>
+                <TodoList key={tl.id} id={tl.id} title={tl.title} tasks={tl.tasks}/>
+            </Paper>
+        </Grid>)
         return (
-            <>
-                <div>
-                    <AddNewItemForm addItem={this.addTodoList}/>
-                </div>
-                <div className='App'>
-                    {todolists}
-                </div>
-            </>
+            <div className={'App'}>
+                <AppBar position={'static'}>
+                    <Toolbar>
+                        <IconButton edge={'start'} color={'inherit'} aria-label={'menu'}>
+                            <Menu/>
+                        </IconButton>
+                        <Typography variant={'h6'}>
+                            News
+                        </Typography>
+                        <Button color={'inherit'}>Login</Button>
+                    </Toolbar>
+                </AppBar>
+                <Container fixed>
+                    <Grid container style={{padding: '20px'}}>
+                        <AddNewItemForm addItem={this.addTodoList}/>
+                    </Grid>
+                    <Grid container spacing={3}>
+                        {todolists}
+                    </Grid>
+                </Container>
+            </div>
         )
     }
 }
@@ -53,7 +68,7 @@ const mapStateToProps = (state: AppStateType): MapStatePropsType => {
     }
 }
 
-const mapDispatchToProps = (dispatch: any):MapDispatchPropsType => {
+const mapDispatchToProps = (dispatch: any): MapDispatchPropsType => {
     return {
         addTodolists: (title) => {
             dispatch(addTodoList(title));
